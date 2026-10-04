@@ -17,10 +17,15 @@
 <!-- ========================================================================
      Screen 5: Prediction Result Layout (Adpanel Minimal Classy Style)
      ======================================================================== -->
-<div class="page-title-section">
-    <div class="page-heading-group">
-        <h2>Prediction Result</h2>
-        <p>Based on the entered student details, the machine learning model predicts:</p>
+<div class="page-title-section" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%;">
+    <div class="page-heading-group" style="flex: 1; margin-bottom: 0;">
+        <h2 style="margin-bottom: 6px;">Prediction Result</h2>
+        <p style="margin-bottom: 0;">Based on the entered student details, the machine learning model predicts:</p>
+    </div>
+    <div style="flex-shrink: 0;">
+        <button type="button" class="btn-adpanel-outline" onclick="document.getElementById('history-modal').style.display='flex';" style="padding: 10px 20px;">
+            <i data-lucide="history" style="width: 16px; height: 16px; margin-right: 8px;"></i> View History
+        </button>
     </div>
 </div>
 
@@ -159,10 +164,15 @@
 <!-- ========================================================================
      Screen 2: Predict Your Placement Form Layout (Minimal Classy)
      ======================================================================== -->
-<div class="page-title-section">
-    <div class="page-heading-group">
-        <h2>Predict Placement</h2>
-        <p>Enter the student details below to compute placement probability with machine learning.</p>
+<div class="page-title-section" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%;">
+    <div class="page-heading-group" style="flex: 1; margin-bottom: 0;">
+        <h2 style="margin-bottom: 6px;">Predict Placement</h2>
+        <p style="margin-bottom: 0;">Enter the student details below to compute placement probability with machine learning.</p>
+    </div>
+    <div style="flex-shrink: 0;">
+        <button type="button" class="btn-adpanel-outline" onclick="document.getElementById('history-modal').style.display='flex';" style="padding: 10px 20px;">
+            <i data-lucide="history" style="width: 16px; height: 16px; margin-right: 8px;"></i> View History
+        </button>
     </div>
 </div>
 
@@ -312,6 +322,59 @@
             <span>&rarr;</span>
         </button>
     </form>
+</div>
+
+<!-- History Modal -->
+<div id="history-modal" class="sidebar-overlay" style="z-index: 300; display: none; align-items: center; justify-content: center; background: rgba(45, 27, 61, 0.4); backdrop-filter: blur(4px);">
+    <div class="goal-card" style="width: 90%; max-width: 840px; max-height: 80vh; overflow-y: auto; position: relative; flex-direction: column; align-items: flex-start; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+        <button type="button" onclick="document.getElementById('history-modal').style.display='none';" style="position: absolute; top: 16px; right: 20px; background: transparent; border: none; font-size: 2rem; cursor: pointer; color: var(--text-muted); transition: color 0.2s;">&times;</button>
+        <h3 style="margin-bottom: 24px; font-family: var(--font-display); font-size: 1.4rem; color: var(--text-black); display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="history" style="color: var(--lv-purple);"></i> Prediction History
+        </h3>
+        
+        <div class="table-responsive" style="width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border-hairline);">
+            <table class="custom-dark-table" style="width: 100%; margin: 0;">
+                <thead>
+                    <tr>
+                        <th style="padding: 14px 18px; text-align: left;">Time</th>
+                        <th style="padding: 14px 18px; text-align: left;">CGPA</th>
+                        <th style="padding: 14px 18px; text-align: left;">Stream</th>
+                        <th style="padding: 14px 18px; text-align: left;">Prediction</th>
+                        <th style="padding: 14px 18px; text-align: left;">Probability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                    <tr style="border-bottom: 1px solid var(--border-hairline); background: #FFFFFF;">
+                        <td style="padding: 14px 18px; font-size: 0.85rem; color: var(--text-muted);">{{ item.timestamp }}</td>
+                        <td style="padding: 14px 18px; font-weight: 700; color: var(--text-black);">{{ item.cgpa }}</td>
+                        <td style="padding: 14px 18px; color: var(--text-body); font-size: 0.9rem;">{{ item.specialisation }}</td>
+                        <td style="padding: 14px 18px;">
+                            {% if item.prediction == 'PLACED' %}
+                            <span class="status-tag placed" style="font-size: 0.72rem; padding: 4px 10px;">Placed</span>
+                            {% else %}
+                            <span class="status-tag not-placed" style="font-size: 0.72rem; padding: 4px 10px;">Not Placed</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 14px 18px; font-weight: 600; color: var(--lv-purple);">
+                            {% if item.probability and item.probability != 'N/A' %}
+                            {{ item.probability|float|round(1) }}%
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.95rem;">
+                            No prediction history found. Run a prediction to see it here!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 {% endif %}

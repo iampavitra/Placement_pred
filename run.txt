@@ -1,0 +1,6 @@
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+./venv/Scripts/activate.ps1                               
+cd app
+
+python app.py

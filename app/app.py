@@ -39,6 +39,49 @@ try:
 except Exception as e:
     print(f"[WARNING] Could not initialize predictor on startup: {e}")
 
+HISTORY_FILE = os.path.join(DATA_DIR, "predictions_history.json")
+
+def save_prediction(form_data, result):
+    import datetime
+    history = []
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                history = json.load(f)
+        except:
+            pass
+    
+    # Extract prob from result dict
+    prob = result.get('probability')
+    if isinstance(prob, dict) and 'Placed' in prob:
+        prob = prob['Placed']
+        
+    record = {
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "cgpa": form_data.get('CGPA', 'N/A'),
+        "specialisation": form_data.get('Specialisation', 'N/A'),
+        "internships": form_data.get('Internships', '0'),
+        "prediction": result.get('status', 'Unknown'),
+        "probability": prob
+    }
+    history.insert(0, record)
+    history = history[:50] # keep last 50
+    
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+        
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(history, f, indent=4)
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
 def load_metrics_and_summary():
     """
     Helper to safely read model comparison and dataset summary JSON files.
@@ -172,12 +215,14 @@ def predict_page():
 
             # Run prediction
             result = predictor.predict(form_data)
+            save_prediction(form_data, result)
         except ValueError as ve:
             error_message = str(ve)
         except Exception as ex:
             error_message = f"An unexpected error occurred during prediction: {ex}"
 
-    return render_template('predict.html', form_data=form_data, result=result, error=error_message)
+    history = load_history()
+    return render_template('predict.html', form_data=form_data, result=result, error=error_message, history=history)
 
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
