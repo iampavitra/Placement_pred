@@ -101,18 +101,18 @@ def predict_page():
 
     # Form defaults matching the modern dark theme design
     form_data = {
-        'Gender': request.form.get('Gender', 'Male'),
+        'Gender': request.form.get('Gender', ''),
         'Tenth_Percentage': request.form.get('Tenth_Percentage', ''),
         'Twelfth_Percentage': request.form.get('Twelfth_Percentage', ''),
         'Graduation_Percentage': request.form.get('Graduation_Percentage', ''),
         'CGPA': request.form.get('CGPA', ''),
-        'Work_Experience': request.form.get('Work_Experience', 'No'),
-        'Specialisation': request.form.get('Specialisation', 'Computer Science'),
-        'Internships': request.form.get('Internships', '1'),
-        'Projects': request.form.get('Projects', '2'),
-        'Technical_Skills': request.form.get('Technical_Skills', '3'),
-        'Communication_Skills': request.form.get('Communication_Skills', '3'),
-        'Backlogs': request.form.get('Backlogs', '0')
+        'Work_Experience': request.form.get('Work_Experience', ''),
+        'Specialisation': request.form.get('Specialisation', ''),
+        'Internships': request.form.get('Internships', ''),
+        'Projects': request.form.get('Projects', ''),
+        'Technical_Skills': request.form.get('Technical_Skills', ''),
+        'Communication_Skills': request.form.get('Communication_Skills', ''),
+        'Backlogs': request.form.get('Backlogs', '')
     }
 
     result = None

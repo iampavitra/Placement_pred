@@ -167,10 +167,10 @@
 </div>
 
 <div class="resume-upload-card">
-    <div class="upload-inner" id="resumeDropzone">
+    <div class="upload-inner" id="resumeDropzone" style="cursor: pointer;" onclick="document.getElementById('resumeFileInput').click();">
         <div class="upload-icon"><i data-lucide="file-text"></i></div>
         <h3>Upload Resume (Auto-fill)</h3>
-        <p>Drag and drop your PDF resume here, or <label for="resumeFileInput" class="upload-link">browse files</label> to instantly extract your academic profile and skills.</p>
+        <p>Drag and drop your PDF resume here, or <span class="upload-link">browse files</span> to instantly extract your academic profile and skills.</p>
         <input type="file" id="resumeFileInput" accept=".pdf" style="display: none;">
         <div id="uploadStatus" class="upload-status"></div>
     </div>
@@ -183,7 +183,8 @@
             <!-- 1. Gender -->
             <div class="form-field-group">
                 <label class="field-label" for="Gender">Gender</label>
-                <select name="Gender" id="Gender" class="field-select">
+                <select name="Gender" id="Gender" class="field-select" required>
+                    <option value="" disabled {% if not form_data.Gender %}selected{% endif %}>Select...</option>
                     <option value="Male" {% if form_data.Gender == 'Male' %}selected{% endif %}>Male</option>
                     <option value="Female" {% if form_data.Gender == 'Female' %}selected{% endif %}>Female</option>
                 </select>
@@ -214,7 +215,8 @@
             <!-- 5. Work Experience -->
             <div class="form-field-group">
                 <label class="field-label" for="Work_Experience">Work Experience</label>
-                <select name="Work_Experience" id="Work_Experience" class="field-select">
+                <select name="Work_Experience" id="Work_Experience" class="field-select" required>
+                    <option value="" disabled {% if not form_data.Work_Experience %}selected{% endif %}>Select...</option>
                     <option value="No" {% if form_data.Work_Experience == 'No' %}selected{% endif %}>No</option>
                     <option value="Yes" {% if form_data.Work_Experience == 'Yes' %}selected{% endif %}>Yes</option>
                 </select>
@@ -223,7 +225,8 @@
             <!-- 6. Specialisation -->
             <div class="form-field-group">
                 <label class="field-label" for="Specialisation">Specialisation</label>
-                <select name="Specialisation" id="Specialisation" class="field-select">
+                <select name="Specialisation" id="Specialisation" class="field-select" required>
+                    <option value="" disabled {% if not form_data.Specialisation %}selected{% endif %}>Select...</option>
                     <option value="Computer Science" {% if form_data.Specialisation == 'Computer Science' %}selected{% endif %}>Computer Science</option>
                     <option value="Information Technology" {% if form_data.Specialisation == 'Information Technology' %}selected{% endif %}>Information Technology</option>
                     <option value="Electronics" {% if form_data.Specialisation == 'Electronics' %}selected{% endif %}>Electronics</option>
@@ -235,7 +238,8 @@
             <!-- 7. Internships -->
             <div class="form-field-group">
                 <label class="field-label" for="Internships">Internships</label>
-                <select name="Internships" id="Internships" class="field-select">
+                <select name="Internships" id="Internships" class="field-select" required>
+                    <option value="" disabled {% if not form_data.Internships %}selected{% endif %}>Select...</option>
                     <option value="1" {% if form_data.Internships == '1' %}selected{% endif %}>Yes (1)</option>
                     <option value="2" {% if form_data.Internships == '2' %}selected{% endif %}>Yes (2)</option>
                     <option value="3" {% if form_data.Internships == '3' %}selected{% endif %}>Yes (3+)</option>
@@ -246,7 +250,8 @@
             <!-- 8. Projects -->
             <div class="form-field-group">
                 <label class="field-label" for="Projects">Projects</label>
-                <select name="Projects" id="Projects" class="field-select">
+                <select name="Projects" id="Projects" class="field-select" required>
+                    <option value="" disabled {% if not form_data.Projects %}selected{% endif %}>Select...</option>
                     <option value="2" {% if form_data.Projects == '2' %}selected{% endif %}>Yes (2)</option>
                     <option value="1" {% if form_data.Projects == '1' %}selected{% endif %}>Yes (1)</option>
                     <option value="3" {% if form_data.Projects == '3' %}selected{% endif %}>Yes (3+)</option>
@@ -263,10 +268,11 @@
             <div class="form-grid-4">
                 <div class="form-field-group">
                     <label class="field-label" for="Technical_Skills">Technical Skills (1 - 5)</label>
-                    <select name="Technical_Skills" id="Technical_Skills" class="field-select">
+                    <select name="Technical_Skills" id="Technical_Skills" class="field-select" required>
+                        <option value="" disabled {% if not form_data.Technical_Skills %}selected{% endif %}>Select...</option>
                         <option value="1" {% if form_data.Technical_Skills == '1' %}selected{% endif %}>1 - Beginner</option>
                         <option value="2" {% if form_data.Technical_Skills == '2' %}selected{% endif %}>2 - Basic</option>
-                        <option value="3" {% if form_data.Technical_Skills == '3' or not form_data.Technical_Skills %}selected{% endif %}>3 - Intermediate</option>
+                        <option value="3" {% if form_data.Technical_Skills == '3' %}selected{% endif %}>3 - Intermediate</option>
                         <option value="4" {% if form_data.Technical_Skills == '4' %}selected{% endif %}>4 - Advanced</option>
                         <option value="5" {% if form_data.Technical_Skills == '5' %}selected{% endif %}>5 - Expert</option>
                     </select>
@@ -274,10 +280,11 @@
 
                 <div class="form-field-group">
                     <label class="field-label" for="Communication_Skills">Communication Skills (1 - 5)</label>
-                    <select name="Communication_Skills" id="Communication_Skills" class="field-select">
+                    <select name="Communication_Skills" id="Communication_Skills" class="field-select" required>
+                        <option value="" disabled {% if not form_data.Communication_Skills %}selected{% endif %}>Select...</option>
                         <option value="1" {% if form_data.Communication_Skills == '1' %}selected{% endif %}>1 - Poor</option>
                         <option value="2" {% if form_data.Communication_Skills == '2' %}selected{% endif %}>2 - Below Average</option>
-                        <option value="3" {% if form_data.Communication_Skills == '3' or not form_data.Communication_Skills %}selected{% endif %}>3 - Good</option>
+                        <option value="3" {% if form_data.Communication_Skills == '3' %}selected{% endif %}>3 - Good</option>
                         <option value="4" {% if form_data.Communication_Skills == '4' %}selected{% endif %}>4 - Very Good</option>
                         <option value="5" {% if form_data.Communication_Skills == '5' %}selected{% endif %}>5 - Excellent</option>
                     </select>
@@ -286,7 +293,7 @@
                 <div class="form-field-group">
                     <label class="field-label" for="Backlogs">Active Backlogs</label>
                     <input type="number" min="0" max="20" name="Backlogs" id="Backlogs" 
-                           class="field-input" placeholder="0" value="{{ form_data.Backlogs or '0' }}">
+                           class="field-input" placeholder="0" value="{{ form_data.Backlogs }}" required>
                 </div>
 
                 <div class="form-field-group" style="justify-content: flex-end;">
@@ -385,8 +392,9 @@
         }
 
         function fillForm(features) {
-            // Helper to set value if element exists
+            // Helper to set value if element exists AND feature is not null/undefined
             const setVal = (id, val) => {
+                if (val === null || val === undefined) return;
                 const el = document.getElementById(id);
                 if (el) {
                     el.value = val;
@@ -400,14 +408,18 @@
             setVal('Tenth_Percentage', features.tenth_percentage);
             setVal('Twelfth_Percentage', features.twelfth_percentage);
             setVal('Work_Experience', features.work_experience);
-            setVal('Internships', Math.min(features.internships, 3).toString());
             
-            // Map projects (0, 1, 2+)
-            let pVal = features.projects;
-            if (pVal >= 2) pVal = '2';
-            else if (pVal == 1) pVal = '1';
-            else pVal = '0';
-            setVal('Projects', pVal);
+            if (features.internships !== null) {
+                setVal('Internships', Math.min(features.internships, 3).toString());
+            }
+            
+            if (features.projects !== null) {
+                let pVal = features.projects;
+                if (pVal >= 2) pVal = '2';
+                else if (pVal == 1) pVal = '1';
+                else pVal = '0';
+                setVal('Projects', pVal);
+            }
 
             setVal('Technical_Skills', features.technical_skills);
             setVal('Communication_Skills', features.communication_skills);

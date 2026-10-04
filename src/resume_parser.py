@@ -22,7 +22,7 @@ def parse_resume_to_features(file_stream):
     text_lower = text.lower()
 
     # 1. CGPA Extraction
-    cgpa = 7.0  # default
+    cgpa = None
     cgpa_matches = re.findall(r'cgpa[\s:]*([0-9]\.[0-9]+|10\.0+)', text_lower)
     if cgpa_matches:
         try:
@@ -33,7 +33,7 @@ def parse_resume_to_features(file_stream):
             pass
 
     # 2. 10th Percentage
-    tenth = 75.0 # default
+    tenth = None
     tenth_matches = re.findall(r'(?:10th|x\s|secondary).*?([0-9]{2,3}(?:\.[0-9]+)?)[\s]*%', text_lower)
     if tenth_matches:
         try:
@@ -44,7 +44,7 @@ def parse_resume_to_features(file_stream):
             pass
 
     # 3. 12th Percentage
-    twelfth = 75.0
+    twelfth = None
     twelfth_matches = re.findall(r'(?:12th|xii\s|higher secondary).*?([0-9]{2,3}(?:\.[0-9]+)?)[\s]*%', text_lower)
     if twelfth_matches:
         try:
@@ -56,18 +56,17 @@ def parse_resume_to_features(file_stream):
 
     # 4. Internships (count occurrences of "intern" or "internship")
     intern_count = len(re.findall(r'\binternship\b|\bintern\b', text_lower))
-    internships = min(intern_count, 5)
+    internships = min(intern_count, 5) if intern_count > 0 else None
 
     # 5. Projects (count occurrences of "project")
     proj_count = len(re.findall(r'\bproject\b', text_lower))
-    projects = min(proj_count, 5)
+    projects = min(proj_count, 5) if proj_count > 0 else None
 
     # 6. Technical Skills (1-5 scale)
     tech_keywords = ['python', 'java', 'c++', 'javascript', 'react', 'sql', 'machine learning', 'html', 'css', 'node', 'aws']
     tech_score = sum(1 for kw in tech_keywords if kw in text_lower)
-    # Map score: 0->1, 1-2->2, 3-4->3, 5-6->4, 7+->5
     if tech_score == 0:
-        tech_level = 1
+        tech_level = None
     elif tech_score <= 2:
         tech_level = 2
     elif tech_score <= 4:
@@ -81,7 +80,7 @@ def parse_resume_to_features(file_stream):
     comm_keywords = ['communication', 'team', 'lead', 'presented', 'organized', 'managed', 'coordinated', 'english']
     comm_score = sum(1 for kw in comm_keywords if kw in text_lower)
     if comm_score == 0:
-        comm_level = 2 # generous default
+        comm_level = None
     elif comm_score <= 2:
         comm_level = 3
     elif comm_score <= 4:
@@ -92,16 +91,16 @@ def parse_resume_to_features(file_stream):
     # 8. Work Experience (Yes/No)
     exp_keywords = ['experience', 'work history', 'employment', 'employed', 'full-time', 'freelance']
     has_experience = any(kw in text_lower for kw in exp_keywords)
-    work_exp = 'Yes' if has_experience else 'No'
+    work_exp = 'Yes' if has_experience else None
 
     # 9. Backlogs
-    backlog_count = 0
+    backlog_count = None
     if 'backlog' in text_lower:
         bl_matches = re.findall(r'([0-9]+)\s*backlog', text_lower)
         if bl_matches:
             backlog_count = int(bl_matches[0])
         else:
-            backlog_count = 1 # found word but no number
+            backlog_count = 1
 
     return {
         "success": True,
