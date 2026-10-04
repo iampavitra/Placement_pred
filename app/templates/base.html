@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DISHA - Lavender Career Intelligence{% endblock %}</title>
+
+    <!-- Google Fonts: Cormorant Garamond + Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons (standard SVG icon library) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Mobile Top Navigation Bar -->
+    <div class="mobile-topbar">
+        <div class="mobile-brand">
+            DISHA
+        </div>
+        <button class="btn-menu-toggle" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+            <i data-lucide="menu"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Drawer Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+        <!-- ================================================================
+             Left Sidebar Navigation
+             ================================================================ -->
+        <aside class="sidebar" id="appSidebar">
+            <div>
+                <!-- Brand Header -->
+                <div class="sidebar-brand">
+                    <div class="brand-header-flex">
+                        <img src="{{ url_for('static', filename='images/disha-logo.jpg') }}" alt="DISHA Logo" style="width: 160px; height: auto; mix-blend-mode: multiply;">
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="sidebar-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">
+                            <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('predict_page') }}" class="{% if request.endpoint == 'predict_page' %}active{% endif %}">
+                            <span class="nav-icon"><i data-lucide="target"></i></span>
+                            <span>Predict</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('dataset_page') }}" class="{% if request.endpoint == 'dataset_page' %}active{% endif %}">
+                            <span class="nav-icon"><i data-lucide="database"></i></span>
+                            <span>Dataset</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+                            <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">
+                            <span class="nav-icon"><i data-lucide="info"></i></span>
+                            <span>About</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Bottom Sidebar Widget -->
+            <div class="sidebar-footer-card">
+                <div class="title">Production Model Active</div>
+                <div class="sub">92.5% accuracy benchmark powered by Logistic Regression.</div>
+            </div>
+        </aside>
+
+        <!-- ================================================================
+             Main Content Area
+             ================================================================ -->
+        <div class="main-wrapper">
+            <!-- Page Dynamic Body -->
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+
+            <!-- Footer -->
+            <footer class="adpanel-footer-bar">
+                <div>&copy; 2026 DISHA &bull; Final Year BCA Mini Project</div>
+                <div>Machine learning architecture &bull; Built with Python, Scikit-learn &amp; Flask</div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Initialise Lucide icons
+        lucide.createIcons();
+
+        // Responsive mobile sidebar drawer toggle
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('appSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuBtn && sidebar && overlay) {
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

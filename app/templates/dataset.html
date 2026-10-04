@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Dataset Overview - DISHA{% endblock %}
+
+{% block content %}
+<!-- Page Title Section with Download Dataset Button (Adpanel Minimal Style) -->
+<div class="page-title-section">
+    <div class="page-heading-group">
+        <h2>Dataset Overview</h2>
+        <p>Comprehensive tabular benchmark records used for model training, testing, and cross-validation.</p>
+    </div>
+    <div>
+        <a href="{{ url_for('download_dataset') }}" class="btn-adpanel-black">
+            <span>Download Dataset</span>
+            <span>&darr;</span>
+        </a>
+    </div>
+</div>
+
+<!-- 4 Key Dataset Stat Cards -->
+<div class="stats-grid-minimal">
+    <div class="stat-card-minimal">
+        <div class="stat-label-row">
+            <span class="stat-category">Total Records</span>
+            <span class="pill-badge" style="font-size: 0.7rem; padding: 2px 8px;">Rows</span>
+        </div>
+        <div class="stat-value-huge">{{ total_records or 1200 }}</div>
+        <div class="stat-meta">Verified student profiles</div>
+    </div>
+
+    <div class="stat-card-minimal">
+        <div class="stat-label-row">
+            <span class="stat-category">Features</span>
+            <span class="pill-badge" style="font-size: 0.7rem; padding: 2px 8px;">Columns</span>
+        </div>
+        <div class="stat-value-huge">{{ features_count or 11 }}</div>
+        <div class="stat-meta">Input &amp; target attributes</div>
+    </div>
+
+    <div class="stat-card-minimal">
+        <div class="stat-label-row">
+            <span class="stat-category">Target Variable</span>
+            <span class="status-tag placed">Output</span>
+        </div>
+        <div class="stat-value-huge" style="font-size: 1.6rem; margin-top: 4px;">Placement</div>
+        <div class="stat-meta">Binary classification (Placed / Not Placed)</div>
+    </div>
+
+    <div class="stat-card-minimal">
+        <div class="stat-label-row">
+            <span class="stat-category">File Format</span>
+            <span class="pill-badge" style="font-size: 0.7rem; padding: 2px 8px;">CSV</span>
+        </div>
+        <div class="stat-value-huge" style="font-size: 1.6rem; margin-top: 4px;">Structured</div>
+        <div class="stat-meta">Comma-separated values format</div>
+    </div>
+</div>
+
+<!-- Two Columns Layout: Sample Data & Feature List -->
+<div class="dataset-grid-layout">
+    <!-- Left Column: Sample Data Table -->
+    <div class="data-table-card">
+        <div class="chart-card-header">
+            <div class="chart-title">Sample Data Records</div>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">First 15 student rows</span>
+        </div>
+        <div class="table-responsive">
+            <table class="custom-dark-table">
+                <thead>
+                    <tr>
+                        <th>Gender</th>
+                        <th>10th %</th>
+                        <th>12th %</th>
+                        <th>Degree %</th>
+                        <th>Work Exp</th>
+                        <th>Placement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in sample_records %}
+                    <tr>
+                        <td>{{ row.Gender }}</td>
+                        <td>{{ row.Tenth_Percentage }}%</td>
+                        <td>{{ row.Twelfth_Percentage }}%</td>
+                        <td>{{ (row.CGPA * 10)|round(1) }}%</td>
+                        <td>{{ row.Work_Experience }}</td>
+                        <td>
+                            {% if row.Placement_Status == 'Placed' %}
+                            <span class="status-tag placed">Placed</span>
+                            {% else %}
+                            <span class="status-tag not-placed">Not Placed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Right Column: Feature List Card -->
+    <div class="feature-list-card">
+        <div class="feature-list-title">Feature Taxonomy</div>
+        <ul class="feature-list-ul">
+            <li>
+                <span class="feature-dot"></span>
+                <span>Gender (Demographic)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>10th Percentage (Secondary School)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>12th Percentage (Higher Secondary)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Degree Percentage / CGPA (Undergraduate)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Work Experience (Binary: Yes / No)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Specialisation (Academic Engineering Stream)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Internships (Count of internships)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Projects (Count of technical capstones)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Technical Skills Rating (Scale: 1 - 5)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Communication Skills Rating (Scale: 1 - 5)</span>
+            </li>
+            <li>
+                <span class="feature-dot"></span>
+                <span>Active Backlogs (Pending course count)</span>
+            </li>
+            <li>
+                <span class="feature-dot" style="background: var(--status-placed-text);"></span>
+                <strong style="color: var(--status-placed-text);">Placement (Target Classification Output)</strong>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

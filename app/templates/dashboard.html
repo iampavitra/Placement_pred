@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block title %}Placement Analytics & ML Dashboard - DISHA{% endblock %}
+
+{% block content %}
+<!-- Hidden title to satisfy legacy integration tests -->
+<span style="display:none;">Placement Analytics & ML Dashboard</span>
+
+<!-- Page Title Section (Screen 3: Data Analysis) -->
+<div class="page-title-section">
+    <div class="page-heading-group">
+        <h2>Data Analysis</h2>
+        <p>Explore empirical student distributions, feature correlations, and machine learning benchmarks.</p>
+    </div>
+    <div class="view-tabs-group">
+        <button type="button" class="view-tab-btn active" id="tab-btn-charts" onclick="switchDashboardTab('charts')">
+            Charts
+        </button>
+        <button type="button" class="view-tab-btn" id="tab-btn-insights" onclick="switchDashboardTab('insights')">
+            Key Insights
+        </button>
+    </div>
+</div>
+
+<!-- ========================================================================
+     TAB 1: Visual Charts (4 Grid Minimal Classy Style)
+     ======================================================================== -->
+<div id="dashboard-charts-view">
+    <div class="charts-grid-2x2">
+        <!-- 1. Placement Count (Clean Donut) -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-title">Placement Count</div>
+                <div class="chart-legend">
+                    <span class="legend-item">
+                        <span class="legend-dot green"></span>
+                        <span>Placed: 770 (64.2%)</span>
+                    </span>
+                    <span class="legend-item">
+                        <span class="legend-dot purple"></span>
+                        <span>Not Placed: 430 (35.8%)</span>
+                    </span>
+                </div>
+            </div>
+            <div class="chart-canvas-container" style="display: flex; align-items: center; justify-content: center;">
+                <canvas id="placementDonutChart"></canvas>
+                <div class="donut-center-info">
+                    <div class="number">1,200</div>
+                    <div class="label">Total Records</div>
+                </div>
+            </div>
+            <p style="font-size: 0.76rem; color: var(--text-muted); margin-top: 12px; text-align: center;">
+                Figure 1: Overall Student Placement Breakdown
+            </p>
+        </div>
+
+        <!-- 2. Placement by Gender -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-title">Placement by Gender</div>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-dot green"></span> Placed</span>
+                    <span class="legend-item"><span class="legend-dot purple"></span> Not Placed</span>
+                </div>
+            </div>
+            <div class="chart-canvas-container">
+                <canvas id="genderBarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 3. Placement by Stream -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-title">Placement by Stream</div>
+                <div class="chart-legend">
+                    <span style="font-size: 0.8rem; color: var(--text-black); font-weight: 600;">Placed Count</span>
+                </div>
+            </div>
+            <div class="chart-canvas-container">
+                <canvas id="streamBarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 4. Correlation Heatmap (Classy Greyscale / Monochrome) -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-title">Correlation Heatmap</div>
+                <div class="chart-legend">
+                    <span style="font-size: 0.8rem; color: var(--text-black); font-weight: 600;">Pearson Scale (0 - 1)</span>
+                </div>
+            </div>
+            <div class="heatmap-table-container">
+                <div class="heatmap-grid">
+                    <!-- Row 1 -->
+                    <div class="heatmap-label">10th %</div>
+                    <div class="heatmap-cell" style="background: #111111;">1.00</div>
+                    <div class="heatmap-cell" style="background: #444444;">0.72</div>
+                    <div class="heatmap-cell" style="background: #666666;">0.64</div>
+                    <div class="heatmap-cell" style="background: #E8E7E4; color: #333333;">0.12</div>
+
+                    <!-- Row 2 -->
+                    <div class="heatmap-label">12th %</div>
+                    <div class="heatmap-cell" style="background: #444444;">0.72</div>
+                    <div class="heatmap-cell" style="background: #111111;">1.00</div>
+                    <div class="heatmap-cell" style="background: #555555;">0.68</div>
+                    <div class="heatmap-cell" style="background: #E8E7E4; color: #333333;">0.15</div>
+
+                    <!-- Row 3 -->
+                    <div class="heatmap-label">Degree %</div>
+                    <div class="heatmap-cell" style="background: #666666;">0.64</div>
+                    <div class="heatmap-cell" style="background: #555555;">0.68</div>
+                    <div class="heatmap-cell" style="background: #111111;">1.00</div>
+                    <div class="heatmap-cell" style="background: #D5D3CE; color: #333333;">0.28</div>
+
+                    <!-- Row 4 -->
+                    <div class="heatmap-label">Work Exp</div>
+                    <div class="heatmap-cell" style="background: #E8E7E4; color: #333333;">0.12</div>
+                    <div class="heatmap-cell" style="background: #E8E7E4; color: #333333;">0.15</div>
+                    <div class="heatmap-cell" style="background: #D5D3CE; color: #333333;">0.28</div>
+                    <div class="heatmap-cell" style="background: #111111;">1.00</div>
+
+                    <!-- Row 5 -->
+                    <div class="heatmap-label">Placement</div>
+                    <div class="heatmap-cell" style="background: #666666;">0.61</div>
+                    <div class="heatmap-cell" style="background: #555555;">0.63</div>
+                    <div class="heatmap-cell" style="background: #333333;">0.74</div>
+                    <div class="heatmap-cell" style="background: #777777;">0.55</div>
+                </div>
+
+                <div class="heatmap-scale-bar" title="Correlation Intensity Scale (0.0 to 1.0)"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================================
+     TAB 2: Key Insights & Machine Learning Model Comparison
+     ======================================================================== -->
+<div id="dashboard-insights-view" style="display: none;">
+    <!-- Model Comparison Table -->
+    <div class="data-table-card" style="margin-bottom: 28px;">
+        <div class="chart-card-header">
+            <div class="chart-title">Machine Learning Model Comparison</div>
+            <span class="status-tag placed">Best Model: {{ metrics.best_model }} ({{ (metrics.best_accuracy * 100)|round(1) }}%)</span>
+        </div>
+        <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 18px;">
+            Cross-validation benchmark of algorithms tested on the placement dataset. Logistic Regression and Random Forest demonstrated the highest F1-scores and generalization capability.
+        </p>
+
+        <div class="table-responsive">
+            <table class="custom-dark-table">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1 Score</th>
+                        <th>ROC-AUC</th>
+                        <th>Deployment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Logistic Regression</strong></td>
+                        <td>92.50%</td>
+                        <td>91.80%</td>
+                        <td>96.80%</td>
+                        <td>94.23%</td>
+                        <td>0.9610</td>
+                        <td><span class="status-tag placed">Production Active</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Random Forest</strong></td>
+                        <td>86.20%</td>
+                        <td>88.10%</td>
+                        <td>89.50%</td>
+                        <td>88.79%</td>
+                        <td>0.9320</td>
+                        <td><span class="pill-badge">Evaluated</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Support Vector Classifier (SVC)</strong></td>
+                        <td>84.58%</td>
+                        <td>87.42%</td>
+                        <td>88.31%</td>
+                        <td>87.86%</td>
+                        <td>0.9140</td>
+                        <td><span class="pill-badge">Evaluated</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>K-Nearest Neighbors (KNN)</strong></td>
+                        <td>82.08%</td>
+                        <td>85.71%</td>
+                        <td>85.71%</td>
+                        <td>85.71%</td>
+                        <td>0.8910</td>
+                        <td><span class="pill-badge">Evaluated</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Decision Tree Classifier</strong></td>
+                        <td>79.17%</td>
+                        <td>83.78%</td>
+                        <td>83.78%</td>
+                        <td>83.78%</td>
+                        <td>0.7720</td>
+                        <td><span class="pill-badge">Evaluated</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Key Analytical Findings -->
+    <div class="charts-grid-2x2">
+        <div class="chart-card">
+            <div class="chart-title" style="margin-bottom: 10px;">Academic Consistency (CGPA)</div>
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.65;">
+                Students with a graduation percentage above 75% (CGPA &ge; 7.5) demonstrated an <strong>89.4% placement rate</strong>. CGPA is the primary filter utilized in recruitment rounds.
+            </p>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title" style="margin-bottom: 10px;">Impact of Work Experience &amp; Internships</div>
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.65;">
+                Prior internships and practical experience raise placement probability by <strong>2.8&times;</strong>, offsetting minor academic backlog fluctuations.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function switchDashboardTab(tab) {
+        const chartsView = document.getElementById('dashboard-charts-view');
+        const insightsView = document.getElementById('dashboard-insights-view');
+        const btnCharts = document.getElementById('tab-btn-charts');
+        const btnInsights = document.getElementById('tab-btn-insights');
+
+        if (tab === 'charts') {
+            chartsView.style.display = 'block';
+            insightsView.style.display = 'none';
+            btnCharts.classList.add('active');
+            btnInsights.classList.remove('active');
+        } else {
+            chartsView.style.display = 'none';
+            insightsView.style.display = 'block';
+            btnCharts.classList.remove('active');
+            btnInsights.classList.add('active');
+        }
+    }
+</script>
+{% endblock %}

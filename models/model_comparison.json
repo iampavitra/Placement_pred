@@ -1,0 +1,75 @@
+{
+    "best_model": "Logistic Regression",
+    "best_accuracy": 0.925,
+    "best_f1": 0.9423,
+    "models": [
+        {
+            "Model": "Logistic Regression",
+            "Accuracy": 0.925,
+            "Precision": 0.9304,
+            "Recall": 0.9545,
+            "F1_Score": 0.9423,
+            "Confusion_Matrix": [
+                [
+                    75,
+                    11
+                ],
+                [
+                    7,
+                    147
+                ]
+            ]
+        },
+        {
+            "Model": "Decision Tree",
+            "Accuracy": 0.8583,
+            "Precision": 0.8704,
+            "Recall": 0.9156,
+            "F1_Score": 0.8924,
+            "Confusion_Matrix": [
+                [
+                    65,
+                    21
+                ],
+                [
+                    13,
+                    141
+                ]
+            ]
+        },
+        {
+            "Model": "Random Forest",
+            "Accuracy": 0.9042,
+            "Precision": 0.8922,
+            "Recall": 0.9675,
+            "F1_Score": 0.9283,
+            "Confusion_Matrix": [
+                [
+                    68,
+                    18
+                ],
+                [
+                    5,
+                    149
+                ]
+            ]
+        },
+        {
+            "Model": "K-Nearest Neighbors",
+            "Accuracy": 0.9083,
+            "Precision": 0.9024,
+            "Recall": 0.961,
+            "F1_Score": 0.9308,
+            "Confusion_Matrix": [
+                [
+                    70,
+                    16
+                ],
+                [
+                    6,
+                    148
+                ]
+            ]
+        }
+    ]
+}

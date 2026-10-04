@@ -1,0 +1,45 @@
+========================================================================
+COLLEGE PLACEMENT PREDICTION USING MACHINE LEARNING
+HOW TO RUN THE PROJECT (QUICK STEP-BY-STEP INSTRUCTIONS)
+========================================================================
+
+PREREQUISITES:
+- Python 3.10+ or Python 3.11 installed.
+- Required packages installed from requirements.txt:
+    pip install -r requirements.txt
+
+------------------------------------------------------------------------
+OPTION A: QUICK 1-CLICK RUN (EASIEST)
+------------------------------------------------------------------------
+Double-click on the `run.bat` file in this directory.
+It will automatically launch the Flask development server.
+Then open your web browser (Chrome, Edge, Firefox) and navigate to:
+    http://127.0.0.1:5000
+
+------------------------------------------------------------------------
+OPTION B: MANUAL COMMAND LINE EXECUTION (POWERSHELL / CMD)
+------------------------------------------------------------------------
+1. Open PowerShell or Command Prompt in this project folder:
+   cd c:\Users\naidu\Desktop\project
+
+2. (Optional) Re-train the models if you modified data:
+   python src/train_model.py
+
+3. (Optional) Re-generate visualization charts:
+   python src/visualization.py
+
+4. Launch the web application:
+   python app/app.py
+
+5. Open your browser and open:
+   http://127.0.0.1:5000
+
+------------------------------------------------------------------------
+APPLICATION PAGES:
+------------------------------------------------------------------------
+- Home Page:          http://127.0.0.1:5000/
+- Prediction Form:    http://127.0.0.1:5000/predict
+- Analytics & Charts: http://127.0.0.1:5000/dashboard
+- About & Viva Guide: http://127.0.0.1:5000/about
+
+========================================================================

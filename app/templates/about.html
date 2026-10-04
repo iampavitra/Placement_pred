@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}About This Project - DISHA{% endblock %}
+
+{% block content %}
+<!-- Page Title Section (Screen 6: About) -->
+<div class="page-title-section">
+    <div class="page-heading-group">
+        <h2>About This Project</h2>
+        <p>College Placement Prediction using Machine Learning &bull; BCA Final Year Project</p>
+    </div>
+</div>
+
+<!-- Hero Editorial Showcase Card -->
+<div class="about-hero-card">
+    <img src="{{ url_for('static', filename='images/adpanel_feature_card.jpg') }}" alt="Minimalist Academic Achievement Certificate" class="about-books-img">
+    <div class="about-text-content">
+        <h3>Project Objective</h3>
+        <p>
+            This project uses machine learning algorithms to predict whether a college student will get placed or not based on their academic performance, skills, internships, and other relevant factors. By leveraging supervised classification models, universities and students can identify early intervention points.
+        </p>
+
+        <div class="tech-badges-label">Core Technologies &amp; Libraries</div>
+        <div class="tech-badges-row">
+            <span class="tech-pill">Python 3.11</span>
+            <span class="tech-pill">Pandas</span>
+            <span class="tech-pill">NumPy</span>
+            <span class="tech-pill">Scikit-learn</span>
+            <span class="tech-pill">Matplotlib</span>
+            <span class="tech-pill">Seaborn</span>
+            <span class="tech-pill">Jupyter Notebook</span>
+            <span class="tech-pill">Flask</span>
+            <span class="tech-pill">HTML5 &amp; Vanilla CSS</span>
+        </div>
+    </div>
+</div>
+
+<!-- Project Goal Card -->
+<div class="goal-card">
+    <div class="goal-icon-circle">
+        ✦
+    </div>
+    <div class="goal-content">
+        <h4>Target Mission</h4>
+        <p>Empower undergraduate students to diagnose their placement readiness and take decisive steps towards career advancement.</p>
+    </div>
+</div>
+
+<!-- Project Workflow Section -->
+<div class="viva-section" style="margin-bottom: 28px;">
+    <div class="viva-title">
+        <span>Project Workflow &amp; Machine Learning Pipeline</span>
+    </div>
+    <div class="charts-grid-2x2">
+        <div class="chart-card">
+            <div class="chart-title">1. Data Ingestion &amp; Synthesis</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin-top: 8px;">
+                1,200 curated student profiles covering primary metrics: 10th percentage, 12th percentage, CGPA, internships, projects, technical skills, and active backlogs.
+            </p>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">2. Feature Preprocessing &amp; Scaling</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin-top: 8px;">
+                Feature vectors are normalized using <code>StandardScaler</code> so high-variance metrics like percentages don't bias smaller scale metrics like backlog counts.
+            </p>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">3. Model Training &amp; Validation</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin-top: 8px;">
+                Trained and evaluated 5 classification algorithms: <strong>Logistic Regression</strong>, Random Forest, Support Vector Classifier, KNN, and Decision Trees.
+            </p>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">4. Real-time Inference Engine</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin-top: 8px;">
+                Winning model deployed with Flask REST endpoints and interactive web UI for instantaneous probability scoring and personalized advisory feedback.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Viva & Evaluation Guide Accordion -->
+<div class="viva-section">
+    <div class="viva-title">
+        <span>Examiner Viva Q&amp;A Guide</span>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Q1: Why did Logistic Regression outperform or match tree models on this dataset?</span>
+            <span>+</span>
+        </button>
+        <div class="accordion-body">
+            Placement eligibility criteria in colleges are largely linear decision boundaries (e.g., meeting a minimum CGPA threshold combined with zero backlogs and internship experience). Logistic Regression fits smooth sigmoidal decision boundaries with high calibration without overfitting on smaller noise parameters.
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Q2: What is the purpose of StandardScaler before model inference?</span>
+            <span>+</span>
+        </button>
+        <div class="accordion-body">
+            Features like 10th percentage range from 50 to 100, while Backlogs range from 0 to 5. Without standard scaling (mean=0, variance=1), algorithms with distance metrics or weight vectors would place disproportionate emphasis on percentages.
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Q3: How does the system handle class imbalance?</span>
+            <span>+</span>
+        </button>
+        <div class="accordion-body">
+            The dataset features a realistic 64% placed to 36% unplaced ratio. Model evaluation is scored not just on raw accuracy, but on weighted F1-score, Precision, Recall, and ROC-AUC.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleAccordion(button) {
+        const body = button.nextElementSibling;
+        const icon = button.querySelector('span:last-child');
+        if (body.style.display === 'block') {
+            body.style.display = 'none';
+            icon.textContent = '+';
+        } else {
+            body.style.display = 'block';
+            icon.textContent = '−';
+        }
+    }
+</script>
+{% endblock %}

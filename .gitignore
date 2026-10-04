@@ -1,0 +1,17 @@
+# Environment
+venv/
+.env
+__pycache__/
+*.pyc
+__pycache__
+# IDEs
+.vscode/
+.idea/
+venv
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Project specifics
+*.sqlite3
+app.db
