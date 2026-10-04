@@ -166,6 +166,16 @@
     </div>
 </div>
 
+<div class="resume-upload-card">
+    <div class="upload-inner" id="resumeDropzone">
+        <div class="upload-icon"><i data-lucide="file-text"></i></div>
+        <h3>Upload Resume (Auto-fill)</h3>
+        <p>Drag and drop your PDF resume here, or <label for="resumeFileInput" class="upload-link">browse files</label> to instantly extract your academic profile and skills.</p>
+        <input type="file" id="resumeFileInput" accept=".pdf" style="display: none;">
+        <div id="uploadStatus" class="upload-status"></div>
+    </div>
+</div>
+
 <div class="form-card">
     <form action="{{ url_for('predict_page') }}" method="POST">
         <!-- 4 Columns Grid (Responsive across devices) -->
@@ -296,4 +306,114 @@
 </div>
 
 {% endif %}
+{% block scripts %}
+<script>
+    // Resume Drag & Drop Upload Logic
+    const dropzone = document.getElementById('resumeDropzone');
+    const fileInput = document.getElementById('resumeFileInput');
+    const statusDiv = document.getElementById('uploadStatus');
+
+    if (dropzone && fileInput) {
+        // Highlight on drag
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+            dropzone.addEventListener(eventName, () => dropzone.parentElement.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+            dropzone.addEventListener(eventName, () => dropzone.parentElement.classList.remove('dragover'), false);
+        });
+
+        // Handle drop
+        dropzone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        });
+
+        // Handle click
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            
+            if (file.type !== 'application/pdf') {
+                showStatus('Please upload a PDF file.', 'error');
+                return;
+            }
+
+            uploadResume(file);
+        }
+
+        function uploadResume(file) {
+            const formData = new FormData();
+            formData.append('resume', file);
+
+            showStatus('Parsing resume...', 'loading');
+
+            fetch('/api/parse_resume', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showStatus('Resume parsed successfully! Form auto-filled.', 'success');
+                    fillForm(data.features);
+                } else {
+                    showStatus(data.error || 'Failed to parse resume.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showStatus('An error occurred during upload.', 'error');
+            });
+        }
+
+        function showStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = 'upload-status ' + type;
+        }
+
+        function fillForm(features) {
+            // Helper to set value if element exists
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = val;
+                    // Flash effect to show it changed
+                    el.style.backgroundColor = 'var(--lv-lightest)';
+                    setTimeout(() => el.style.backgroundColor = '', 800);
+                }
+            };
+
+            setVal('CGPA', features.cgpa);
+            setVal('Tenth_Percentage', features.tenth_percentage);
+            setVal('Twelfth_Percentage', features.twelfth_percentage);
+            setVal('Work_Experience', features.work_experience);
+            setVal('Internships', Math.min(features.internships, 3).toString());
+            
+            // Map projects (0, 1, 2+)
+            let pVal = features.projects;
+            if (pVal >= 2) pVal = '2';
+            else if (pVal == 1) pVal = '1';
+            else pVal = '0';
+            setVal('Projects', pVal);
+
+            setVal('Technical_Skills', features.technical_skills);
+            setVal('Communication_Skills', features.communication_skills);
+            setVal('Backlogs', features.backlogs);
+        }
+    }
+</script>
+{% endblock %}
 {% endblock %}

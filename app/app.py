@@ -23,6 +23,7 @@ if SRC_DIR not in sys.path:
     sys.path.insert(0, SRC_DIR)
 
 from predict import PlacementPredictor
+from resume_parser import parse_resume_to_features
 
 app = Flask(__name__)
 app.secret_key = "bca_placement_prediction_secret_key_2026"
@@ -212,6 +213,24 @@ def api_predict():
         return jsonify({"success": False, "error": str(ve)}), 400
     except Exception as ex:
         return jsonify({"success": False, "error": str(ex)}), 500
+
+@app.route('/api/parse_resume', methods=['POST'])
+def api_parse_resume():
+    if 'resume' not in request.files:
+        return jsonify({"success": False, "error": "No file uploaded."}), 400
+    
+    file = request.files['resume']
+    if file.filename == '':
+        return jsonify({"success": False, "error": "No file selected."}), 400
+    
+    if not file.filename.lower().endswith('.pdf'):
+        return jsonify({"success": False, "error": "Only PDF files are supported."}), 400
+        
+    result = parse_resume_to_features(file)
+    if not result.get('success'):
+        return jsonify({"success": False, "error": result.get('error', 'Failed to parse resume.')}), 500
+        
+    return jsonify(result)
 
 @app.route('/analytics')
 @app.route('/dashboard')
