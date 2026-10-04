@@ -1,10 +1,16 @@
-import re
+import os
+import json
+import requests
 import PyPDF2
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def parse_resume_to_features(file_stream):
     """
-    Takes a file stream (PDF), extracts text, and uses regex/heuristics
-    to map resume content to the 9 ML model features.
+    Takes a file stream (PDF), extracts text, and uses an LLM (NVIDIA Nemotron Reasoning)
+    via raw requests to map resume content to the 11 ML model features.
     """
     text = ""
     try:
@@ -19,100 +25,80 @@ def parse_resume_to_features(file_stream):
     if not text.strip():
         return {"error": "Could not extract text from PDF."}
 
-    text_lower = text.lower()
+    # Initialize NVIDIA endpoint
+    api_key = os.getenv("NVIDIA_API_KEY")
+    if not api_key:
+        return {"error": "NVIDIA_API_KEY not found in environment."}
 
-    # 1. CGPA Extraction
-    cgpa = None
-    cgpa_matches = re.findall(r'cgpa[\s:]*([0-9]\.[0-9]+|10\.0+)', text_lower)
-    if cgpa_matches:
-        try:
-            parsed_cgpa = float(cgpa_matches[0])
-            if 0.0 <= parsed_cgpa <= 10.0:
-                cgpa = parsed_cgpa
-        except:
-            pass
-
-    # 2. 10th Percentage
-    tenth = None
-    tenth_matches = re.findall(r'(?:10th|x\s|secondary).*?([0-9]{2,3}(?:\.[0-9]+)?)[\s]*%', text_lower)
-    if tenth_matches:
-        try:
-            parsed = float(tenth_matches[0])
-            if 0.0 <= parsed <= 100.0:
-                tenth = parsed
-        except:
-            pass
-
-    # 3. 12th Percentage
-    twelfth = None
-    twelfth_matches = re.findall(r'(?:12th|xii\s|higher secondary).*?([0-9]{2,3}(?:\.[0-9]+)?)[\s]*%', text_lower)
-    if twelfth_matches:
-        try:
-            parsed = float(twelfth_matches[0])
-            if 0.0 <= parsed <= 100.0:
-                twelfth = parsed
-        except:
-            pass
-
-    # 4. Internships (count occurrences of "intern" or "internship")
-    intern_count = len(re.findall(r'\binternship\b|\bintern\b', text_lower))
-    internships = min(intern_count, 5) if intern_count > 0 else None
-
-    # 5. Projects (count occurrences of "project")
-    proj_count = len(re.findall(r'\bproject\b', text_lower))
-    projects = min(proj_count, 5) if proj_count > 0 else None
-
-    # 6. Technical Skills (1-5 scale)
-    tech_keywords = ['python', 'java', 'c++', 'javascript', 'react', 'sql', 'machine learning', 'html', 'css', 'node', 'aws']
-    tech_score = sum(1 for kw in tech_keywords if kw in text_lower)
-    if tech_score == 0:
-        tech_level = None
-    elif tech_score <= 2:
-        tech_level = 2
-    elif tech_score <= 4:
-        tech_level = 3
-    elif tech_score <= 6:
-        tech_level = 4
-    else:
-        tech_level = 5
-
-    # 7. Communication Skills (1-5 scale)
-    comm_keywords = ['communication', 'team', 'lead', 'presented', 'organized', 'managed', 'coordinated', 'english']
-    comm_score = sum(1 for kw in comm_keywords if kw in text_lower)
-    if comm_score == 0:
-        comm_level = None
-    elif comm_score <= 2:
-        comm_level = 3
-    elif comm_score <= 4:
-        comm_level = 4
-    else:
-        comm_level = 5
-
-    # 8. Work Experience (Yes/No)
-    exp_keywords = ['experience', 'work history', 'employment', 'employed', 'full-time', 'freelance']
-    has_experience = any(kw in text_lower for kw in exp_keywords)
-    work_exp = 'Yes' if has_experience else None
-
-    # 9. Backlogs
-    backlog_count = None
-    if 'backlog' in text_lower:
-        bl_matches = re.findall(r'([0-9]+)\s*backlog', text_lower)
-        if bl_matches:
-            backlog_count = int(bl_matches[0])
-        else:
-            backlog_count = 1
-
-    return {
-        "success": True,
-        "features": {
-            "cgpa": cgpa,
-            "tenth_percentage": tenth,
-            "twelfth_percentage": twelfth,
-            "internships": internships,
-            "projects": projects,
-            "technical_skills": tech_level,
-            "communication_skills": comm_level,
-            "backlogs": backlog_count,
-            "work_experience": work_exp
+    try:
+        invoke_url = "https://integrate.api.nvidia.com/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
         }
-    }
+        
+        # Merge instructions into the user prompt to match the exact user payload structure
+        system_instructions = """
+        You are an expert HR parser. Extract the following student features from the resume text provided.
+        Return ONLY a JSON object (without markdown blocks like ```json). If a metric cannot be found or inferred confidently, return null for that key. Do NOT guess blindly, but DO infer 'gender' from names/pronouns, and 'specialisation' from degree/major.
+        Keys to return:
+        - "cgpa": (float, e.g., 8.5)
+        - "tenth_percentage": (float)
+        - "twelfth_percentage": (float)
+        - "internships": (integer count, max 3)
+        - "internships_list": (list of strings, exact titles or companies of the internships)
+        - "projects": (integer count, max 3)
+        - "projects_list": (list of strings, names or short descriptions of the projects)
+        - "technical_skills": (integer 1-5, where 1=Beginner, 5=Expert based on tech keywords)
+        - "communication_skills": (integer 1-5, based on leadership/soft skills keywords)
+        - "backlogs": (integer count)
+        - "work_experience": (string "Yes" or "No", based on full-time/part-time employment history)
+        - "gender": (string "Male" or "Female", infer from name or pronouns. If unsure, null)
+        - "specialisation": (string, one of: "Computer Science", "Information Technology", "Electronics", "Mechanical", "Others")
+        
+        RESUME TEXT:
+        """
+
+        payload = {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": system_instructions + text[:8000]
+                }
+            ],
+            "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+            "max_tokens": 1024,
+            "reasoning_budget": 512,
+            "stream": False,
+            "temperature": 0.6,
+            "top_p": 0.95
+        }
+
+        response = requests.post(invoke_url, headers=headers, json=payload)
+        response.raise_for_status()
+        
+        data = response.json()
+        response_content = data['choices'][0]['message']['content'].strip()
+        
+        # Robustly extract JSON block in case the LLM includes conversational text
+        import re
+        json_match = re.search(r'\{.*\}', response_content, re.DOTALL)
+        if json_match:
+            json_str = json_match.group(0)
+        else:
+            json_str = response_content.strip()
+            
+        features = json.loads(json_str)
+        
+        return {
+            "success": True,
+            "features": features
+        }
+
+    except json.JSONDecodeError as e:
+        return {"error": f"Failed to parse LLM response as JSON: {str(e)}"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Network Error: {str(e)}"}
+    except Exception as e:
+        return {"error": f"LLM API Error: {str(e)}"}

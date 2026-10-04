@@ -245,6 +245,7 @@
                     <option value="3" {% if form_data.Internships == '3' %}selected{% endif %}>Yes (3+)</option>
                     <option value="0" {% if form_data.Internships == '0' %}selected{% endif %}>No (0)</option>
                 </select>
+                <div id="internships-list-display" style="margin-top: 6px; font-size: 0.75rem; color: var(--lv-purple); font-weight: 500;"></div>
             </div>
 
             <!-- 8. Projects -->
@@ -257,6 +258,7 @@
                     <option value="3" {% if form_data.Projects == '3' %}selected{% endif %}>Yes (3+)</option>
                     <option value="0" {% if form_data.Projects == '0' %}selected{% endif %}>No (0)</option>
                 </select>
+                <div id="projects-list-display" style="margin-top: 6px; font-size: 0.75rem; color: var(--lv-purple); font-weight: 500;"></div>
             </div>
         </div>
 
@@ -365,6 +367,12 @@
             const formData = new FormData();
             formData.append('resume', file);
 
+            // Clear previous lists
+            const intDiv = document.getElementById('internships-list-display');
+            if (intDiv) intDiv.innerHTML = '';
+            const projDiv = document.getElementById('projects-list-display');
+            if (projDiv) projDiv.innerHTML = '';
+
             showStatus('Parsing resume...', 'loading');
 
             fetch('/api/parse_resume', {
@@ -408,9 +416,17 @@
             setVal('Tenth_Percentage', features.tenth_percentage);
             setVal('Twelfth_Percentage', features.twelfth_percentage);
             setVal('Work_Experience', features.work_experience);
+            setVal('Gender', features.gender);
+            setVal('Specialisation', features.specialisation);
             
             if (features.internships !== null) {
                 setVal('Internships', Math.min(features.internships, 3).toString());
+                if (features.internships_list && features.internships_list.length > 0) {
+                    const intDiv = document.getElementById('internships-list-display');
+                    if(intDiv) {
+                        intDiv.innerHTML = '✨ ' + features.internships_list.join('<br>✨ ');
+                    }
+                }
             }
             
             if (features.projects !== null) {
@@ -419,6 +435,13 @@
                 else if (pVal == 1) pVal = '1';
                 else pVal = '0';
                 setVal('Projects', pVal);
+                
+                if (features.projects_list && features.projects_list.length > 0) {
+                    const projDiv = document.getElementById('projects-list-display');
+                    if(projDiv) {
+                        projDiv.innerHTML = '✨ ' + features.projects_list.join('<br>✨ ');
+                    }
+                }
             }
 
             setVal('Technical_Skills', features.technical_skills);

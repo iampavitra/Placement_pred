@@ -17,16 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: ['Placed', 'Not Placed'],
                 datasets: [{
                     data: [770, 430],
-                    backgroundColor: ['#196C44', '#0A0A0A'],
+                    backgroundColor: ['#8774E1', '#2D1B3D'],
                     borderColor: '#FFFFFF',
                     borderWidth: 4,
-                    hoverOffset: 4
+                    hoverOffset: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 cutout: '76%',
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart',
+                    animateScale: true
+                },
                 plugins: {
                     legend: {
                         display: false
@@ -62,22 +67,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: 'Placed',
                         data: [470, 300],
-                        backgroundColor: '#196C44',
-                        borderRadius: 4,
-                        barThickness: 24
+                        backgroundColor: '#8774E1',
+                        borderRadius: 6,
+                        barThickness: 28
                     },
                     {
                         label: 'Not Placed',
                         data: [260, 170],
-                        backgroundColor: '#0A0A0A',
-                        borderRadius: 4,
-                        barThickness: 24
+                        backgroundColor: '#2D1B3D',
+                        borderRadius: 6,
+                        barThickness: 28
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 1800,
+                    easing: 'easeOutQuart'
+                },
                 plugins: {
                     legend: {
                         display: false
@@ -114,14 +123,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Placed',
                     data: [210, 165, 140, 115, 80],
-                    backgroundColor: '#0A0A0A',
-                    borderRadius: 4,
-                    barThickness: 26
+                    backgroundColor: '#A388EE',
+                    borderRadius: 6,
+                    barThickness: 30
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 2200,
+                    easing: 'easeOutQuint'
+                },
                 plugins: {
                     legend: { display: false },
                     tooltip: {

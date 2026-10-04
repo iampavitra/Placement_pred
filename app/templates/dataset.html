@@ -10,8 +10,8 @@
         <p>Comprehensive tabular benchmark records used for model training, testing, and cross-validation.</p>
     </div>
     <div>
-        <a href="{{ url_for('download_dataset') }}" class="btn-adpanel-black">
-            <span>Download Dataset</span>
+        <a href="#dataset-preview" class="btn-adpanel-black">
+            <span>Preview Dataset</span>
             <span>&darr;</span>
         </a>
     </div>
@@ -59,20 +59,26 @@
 <!-- Two Columns Layout: Sample Data & Feature List -->
 <div class="dataset-grid-layout">
     <!-- Left Column: Sample Data Table -->
-    <div class="data-table-card">
+    <div class="data-table-card" id="dataset-preview">
         <div class="chart-card-header">
-            <div class="chart-title">Sample Data Records</div>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">First 15 student rows</span>
+            <div class="chart-title">Full Dataset Preview</div>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Sample of 100 student records</span>
         </div>
         <div class="table-responsive">
             <table class="custom-dark-table">
                 <thead>
                     <tr>
                         <th>Gender</th>
+                        <th>Specialisation</th>
                         <th>10th %</th>
                         <th>12th %</th>
                         <th>Degree %</th>
                         <th>Work Exp</th>
+                        <th>Internships</th>
+                        <th>Projects</th>
+                        <th>Tech Skills</th>
+                        <th>Comm Skills</th>
+                        <th>Backlogs</th>
                         <th>Placement</th>
                     </tr>
                 </thead>
@@ -80,10 +86,16 @@
                     {% for row in sample_records %}
                     <tr>
                         <td>{{ row.Gender }}</td>
+                        <td>{{ row.Specialisation }}</td>
                         <td>{{ row.Tenth_Percentage }}%</td>
                         <td>{{ row.Twelfth_Percentage }}%</td>
                         <td>{{ (row.CGPA * 10)|round(1) }}%</td>
                         <td>{{ row.Work_Experience }}</td>
+                        <td>{{ row.Internships }}</td>
+                        <td>{{ row.Projects }}</td>
+                        <td>{{ row.Technical_Skills }} / 5</td>
+                        <td>{{ row.Communication_Skills }} / 5</td>
+                        <td>{{ row.Backlogs }}</td>
                         <td>
                             {% if row.Placement_Status == 'Placed' %}
                             <span class="status-tag placed">Placed</span>

@@ -254,9 +254,9 @@ def dataset_page():
             features_count = len(df.columns)
             
             # Add synthetic Gender and Stream for visual parity with design mockup
-            sample_df = df.head(15).copy()
-            genders = ['Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female']
-            streams = ['Computer Science', 'Information Technology', 'Electronics', 'Computer Science', 'Mechanical', 'Computer Science', 'Electrical', 'Computer Science', 'Information Technology', 'Computer Science', 'Electronics', 'Computer Science', 'Civil', 'Computer Science', 'Information Technology']
+            sample_df = df.head(100).copy()
+            genders = ['Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male']
+            streams = ['Computer Science', 'Information Technology', 'Electronics', 'Computer Science', 'Mechanical', 'Computer Science', 'Electrical']
             
             sample_df['Gender'] = [genders[i % len(genders)] for i in range(len(sample_df))]
             sample_df['Specialisation'] = [streams[i % len(streams)] for i in range(len(sample_df))]

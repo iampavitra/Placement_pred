@@ -310,6 +310,7 @@ a {
     display: flex;
     flex-direction: column;
     max-width: 1400px;
+    width: calc(100vw - var(--sidebar-width));
 }
 
 /* Pages that have internal padding (non-landing) */
@@ -1013,7 +1014,18 @@ main > *:not(.lv-hero):not(.lv-stats-band):not(.lv-marquee-section):not(.lv-show
     box-shadow: var(--shadow-subtle);
     display: flex;
     flex-direction: column;
+    animation: slideFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+@keyframes slideFadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.charts-grid-2x2 .chart-card:nth-child(1) { animation-delay: 0.1s; opacity: 0; }
+.charts-grid-2x2 .chart-card:nth-child(2) { animation-delay: 0.25s; opacity: 0; }
+.charts-grid-2x2 .chart-card:nth-child(3) { animation-delay: 0.4s; opacity: 0; }
+.charts-grid-2x2 .chart-card:nth-child(4) { animation-delay: 0.55s; opacity: 0; }
 
 .chart-card-header {
     display: flex;
@@ -1050,8 +1062,8 @@ main > *:not(.lv-hero):not(.lv-stats-band):not(.lv-marquee-section):not(.lv-show
     height: 10px;
     border-radius: 50%;
 }
-.legend-dot.green  { background: #196C44; }
-.legend-dot.purple { background: var(--lv-purple); }
+.legend-dot.placed  { background: #8774E1; }
+.legend-dot.not-placed { background: #2D1B3D; }
 
 .chart-canvas-container {
     position: relative;
@@ -1446,10 +1458,16 @@ main > *:not(.lv-hero):not(.lv-stats-band):not(.lv-marquee-section):not(.lv-show
 @media (max-width: 768px) {
     .mobile-topbar { display: flex; }
     .sidebar {
-        transform: translateX(-100%);
-        box-shadow: 0 0 30px rgba(45,27,61,0.2);
+        width: 100%;
+        height: auto;
+        bottom: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-hairline);
+        padding-top: 80px; /* Space for the topbar */
+        transform: translateY(-100%);
+        box-shadow: 0 15px 40px rgba(45,27,61,0.15);
     }
-    .sidebar.open { transform: translateX(0); }
+    .sidebar.open { transform: translateY(0); }
     .main-wrapper {
         margin-left: 0;
         padding: 0;
